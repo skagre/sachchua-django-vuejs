@@ -12,6 +12,7 @@ router.register('book', views.BookViewSet, basename='book')
 
 
 urlpatterns = [
+    path('checklogin/', views.UserCheckLoginViewSet.as_view()),
     path('login/', views.UserLoginApiView.as_view()),
     path('', include(router.urls))
 ]

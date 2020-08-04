@@ -4,6 +4,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
 from django.utils import timezone
 
@@ -60,3 +61,13 @@ class BookViewSet(viewsets.ModelViewSet):
 
         return queryset
     
+
+class UserCheckLoginViewSet(ObtainAuthToken):
+
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        return Response({
+            'logged'
+        })

@@ -11,6 +11,8 @@
                 img(src="https://image.flaticon.com/icons/svg/3100/3100752.svg", alt="text-heading")
                 h3 Sách mới cập nhật
                 
+            p(v-if="books.books.length == 0") Không có dữ liệu
+
             router-link(:to="{ path: '/detail/' + book.id }", class="book", v-for="book in books.books", :key="book.id")
                 img(v-bind:src="book.thumbnail", alt="thumbnail")
                 .book__overlay

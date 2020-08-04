@@ -14,6 +14,12 @@ def book_thumbnail_file_path(instance, filename):
 
     return os.path.join('images/', filename)
 
+def book_pdf_file_path(instance, filename):
+    ext = filename.split('.')[-1]
+    filename = f'{uuid.uuid4()}.{ext}'
+
+    return os.path.join('files/', filename)
+
 
 class UserProfileManager(BaseUserManager):
 
@@ -87,6 +93,8 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     thumbnail = models.ImageField(null=True, upload_to=book_thumbnail_file_path)
+    content = models.TextField(null=True)
+    file = models.FileField(null=True, upload_to=book_pdf_file_path)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(null=True)
     user_updated = models.CharField(null=True, max_length=255)

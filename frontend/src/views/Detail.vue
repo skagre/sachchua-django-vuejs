@@ -1,11 +1,15 @@
 <template lang="pug">
     .container
-        //- header
-        cHeader
-        //-end header
 
+        .header
+            router-link(:to="{ path: '/' }") 
+                img(class="logo" src="@/assets/images/logo.png", alt="logo")
+                h1.logo-text Sách chùa
+            div.search-form
+                input(type="text", placeholder="Tìm kiếm...", v-model="search")
+                button(type="submit", v-on:click="searchBook()")
+                    i.fas.fa-search
 
-        //- detail
         .detail-sidebar
             div(style="background-color: #fff; padding: 20px 0; border-top: 3px solid #27AB83;")
                 .book-detail
@@ -35,19 +39,16 @@
             .detail-content__heding
                 h2 Tải xuống:
             a(v-bind:href="book.file" class="detail-content__book-download", target="_blank")
-                i.fas.fa-download PDF
+                i.fas.fa-download
+                | PDF
                 span {{ book.title }}
             .detail-content__heding
                 h2 Bình luận:
             div(class="fb-comments" data-href="http://127.0.0.1:808/#/" data-numposts="5" data-width="100%" data-lazy="true")
             #fb-root
             script(type="application/javascript" async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v7.0" nonce="WFcY15E0")
-        //- end detail
 
-
-        //- footer
         cFooter
-        //- end footer
     
 </template>
 
@@ -80,6 +81,9 @@ export default {
             axios.get(this.base_url + `api/book/` + this.$route.params.id)
             .then((res) => {
                 this.book = res.data;
+            })
+            .catch((err) => {
+                alert(JSON.stringify(err.response.data, null, 4));
             });
         },
     },

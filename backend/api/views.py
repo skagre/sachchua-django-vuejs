@@ -5,6 +5,7 @@ from rest_framework.settings import api_settings
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework import filters
 
 from django.utils import timezone
 
@@ -26,6 +27,7 @@ class UserLoginApiView(ObtainAuthToken):
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
 
     serializer_class = serializers.CategorySerializer
@@ -38,6 +40,15 @@ class CategoryViewSet(viewsets.ModelViewSet):
             updated_on=timezone.now(), 
             user_updated=self.request.user.name
         )
+    
+    def get_queryset(self):
+        orderbyDate = self.request.query_params.get('orderbyDate')
+        if orderbyDate and orderbyDate == 'asc':
+            queryset = models.Category.objects.all().order_by('created_on')
+        else: 
+            queryset = models.Category.objects.all().order_by('-created_on')
+
+        return queryset
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -45,6 +56,8 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BookSerializer  
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
 
     def perform_update(self, serializers):
         serializers.save(
@@ -66,8 +79,14 @@ class UserCheckLoginViewSet(ObtainAuthToken):
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+        
 
     def post(self, request, *args, **kwargs):
         return Response({
-            'logged'
+            'id': request.user.id,
+            'email': request.user.email,
+            'name': request.user.name,
+            'created_on': request.user.created_on
         })
+
+

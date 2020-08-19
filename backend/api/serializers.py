@@ -7,7 +7,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.UserProfile
-        fields = ('id', 'email', 'name', 'password')
+        fields = ('id', 'email', 'name', 'password', 'created_on')
         read_only_fields = ('id',)
         extra_kwargs = {
             'password': {
@@ -46,6 +46,8 @@ class CategorySerializer(serializers.ModelSerializer):
         model = models.Category
         fields = ('id', 'name', 'user', 'created_by', 'created_on', 'updated_on', 'user_updated', 'books')
         read_only_fields = ('id', 'created_by', 'created_on')
+
+
 
 
 

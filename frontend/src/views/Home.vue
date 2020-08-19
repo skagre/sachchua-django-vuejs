@@ -1,11 +1,15 @@
 <template lang="pug">
   .container
-    //- header
-    cHeader
-    //-end header
-    
 
-    //- content
+    .header
+      router-link(:to="{ path: '/' }") 
+          img(class="logo" src="@/assets/images/logo.png", alt="logo")
+          h1.logo-text Sách chùa
+      div.search-form
+          input(type="text", placeholder="Tìm kiếm...", v-model="search")
+          button(type="submit", v-on:click="searchBook()")
+              i.fas.fa-search
+
     .content
       .text-heading
         img(src="@/assets/images/books.png", alt="text-heading")
@@ -23,10 +27,7 @@
         p.book__author 
           i.fas.fa-user-tag 
           | {{ book.author }}
-    //- end content
 
-
-    //- sidebar
     .sidebar
       div(style="background-color: #fff; border-radius: 12px; padding: 25px;")
         .text-heading
@@ -37,12 +38,8 @@
             router-link(:to="{ path: '/category/' + category.id }") 
               i.far.fa-folder-open 
               | {{ category.name }}
-    //- end sidebar
 
-
-    //- footer
     cFooter
-    //- end footer
 </template>
 
 <script>
@@ -63,6 +60,7 @@ export default {
       base_url: `http://localhost:8000/`,
       books: null,
       categories: null,
+      search: ''
     }
   },
   created() {
@@ -71,17 +69,32 @@ export default {
   },
   methods: {
     getAllBook() {
-      axios.get(this.base_url + `api/book/`)
+      axios.get(this.base_url + `api/book/?limit=100`)
       .then((res) => {
-        this.books = res.data;
+        this.books = res.data.results;
       })
-    },
-    getAllCategory() {
-      axios.get(this.base_url + `api/category/`)
-      .then((res) => {
-        this.categories = res.data;
+      .catch((err) => {
+        alert(JSON.stringify(err.response.data, null, 4));
       });
     },
+    getAllCategory() {
+      axios.get(this.base_url + `api/category/?limit=100`)
+      .then((res) => {
+        this.categories = res.data.results;
+      })
+      .catch((err) => {
+        alert(JSON.stringify(err.response.data, null, 4));
+      });
+    },
+    searchBook() {
+      axios.get(this.base_url + `api/book/?search=` + this.search)
+      .then((res) => {
+          this.books = res.data.results;
+      })
+      .catch((err) => {
+          alert(JSON.stringify(err.response.data, null, 4));
+      });
+    }
   },
 }
 </script>

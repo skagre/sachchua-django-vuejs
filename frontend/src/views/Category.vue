@@ -1,11 +1,15 @@
 <template lang="pug">
     .container
-        //- header
-        cHeader
-        //-end header
-        
 
-        //- content
+        .header
+            router-link(:to="{ path: '/' }") 
+                img(class="logo" src="@/assets/images/logo.png", alt="logo")
+                h1.logo-text Sách chùa
+            div.search-form
+                input(type="text", placeholder="Tìm kiếm...", v-model="search")
+                button(type="submit", v-on:click="searchBook()")
+                    i.fas.fa-search
+
         .content
             .text-heading
                 img(src="https://image.flaticon.com/icons/svg/3100/3100752.svg", alt="text-heading")
@@ -23,10 +27,7 @@
                 p.book__author 
                     i.fas.fa-user-tag 
                     | {{ book.author }}
-        //- end content
 
-
-        //- sidebar
         .sidebar
             div(style="background-color: #fff; border-radius: 12px; padding: 25px;")
                 .text-heading
@@ -37,12 +38,9 @@
                         router-link(:to="{ path: '/category/' + category.id }") 
                             i.far.fa-folder-open 
                             | {{ category.name }}
-        //- end sidebar
 
-
-        //- footer
         cFooter
-        //- end footer
+
 </template>
 
 <script>
@@ -74,15 +72,21 @@ export default {
     },
     methods: {
         getBookByCategoryID() {
-            axios.get(this.base_url + `api/category/${this.$route.params.id}`)
+            axios.get(this.base_url + `api/category/${this.$route.params.id}?limit=100`)
             .then((res) => {
                 this.books = res.data;
+            })
+            .catch((err) => {
+                alert(JSON.stringify(err.response.data, null, 4));
             });
         },
         getAllCategory() {
-            axios.get(this.base_url + `api/category/`)
+            axios.get(this.base_url + `api/category/?limit=100`)
             .then((res) => {
-                this.categories = res.data;
+                this.categories = res.data.results;
+            })
+            .catch((err) => {
+                alert(JSON.stringify(err.response.data, null, 4));
             });
         },
     },

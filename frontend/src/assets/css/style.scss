@@ -921,8 +921,8 @@ a {
         .content {
             grid-column: 1/9;
             grid-template-columns: repeat(2, 1fr);
-            .book {
-                grid-column: auto auto;
+            .text-heading {
+                grid-column: 1/3;
             }
         }
         .sidebar {
@@ -931,3 +931,17 @@ a {
     }
 }
 
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    .container {
+        .content {
+            grid-column: 1/6;
+            grid-template-columns: repeat(2, 1fr);
+            .text-heading {
+                grid-column: 1/3;
+            }
+        }
+        .sidebar {
+            grid-column: 6/9;
+        }
+    }
+}
